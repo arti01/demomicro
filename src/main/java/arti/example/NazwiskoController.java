@@ -2,7 +2,10 @@ package arti.example;
 
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
+
+import java.util.List;
 
 @Controller("/osoby")
 public class NazwiskoController {
@@ -18,5 +21,10 @@ public class NazwiskoController {
     @Post("/") // API do zapisywania
     public Nazwisko save(@Body Nazwisko osoba) {
         return nazwiskoRepository.save(osoba);
+    }
+
+    @Get // Obsłuży zapytanie GET na główny adres kontrolera
+    public List<Nazwisko> listAll() {
+        return nazwiskoRepository.findAll();
     }
 }

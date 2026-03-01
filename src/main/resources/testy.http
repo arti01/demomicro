@@ -1,0 +1,8 @@
+### Test zapisu nazwiska
+POST http://localhost:8080/osoby
+Content-Type: application/json
+
+{
+  "imie": "Samuel",
+  "nazwisko": "Vimes"
+}

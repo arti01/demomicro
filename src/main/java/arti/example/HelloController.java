@@ -8,6 +8,6 @@ import io.micronaut.http.annotation.Get;
 
         @Get
         public String index() {
-            return "Bank działa! Body Battery: 28, ale serwer żyje.";
+            return "Dziala! Body Battery: 28, ale serwer żyje.";
         }
     }

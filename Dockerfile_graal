@@ -20,7 +20,7 @@ WORKDIR /app
 
 # Kopiujemy gotową binarkę.
 # UWAGA: Upewnij się, że nazwa 'nazwisko-app' zgadza się z nazwą Twojego projektu w settings.gradle
-COPY --from=build /home/app/build/native/nativeCompile/nazwisko-app /app/server
+COPY --from=build /home/app/build/native/nativeCompile/demomicro /app/server
 
 # Render wymaga wystawienia portu
 EXPOSE 8080

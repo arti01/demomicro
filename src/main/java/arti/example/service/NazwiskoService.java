@@ -17,9 +17,12 @@ public class NazwiskoService {
         this.nazwiskoRepository = nazwiskoRepository;
     }
 
-    public void zapisz(Nazwisko osoba) {
-        // Tutaj w przyszłości dodasz logikę, np. walidację
-        nazwiskoRepository.save(osoba);
+    public void zapisz(Nazwisko osoba, boolean czyDuzymi) {
+        if (czyDuzymi) {
+            nazwiskoRepository.save(osoba.withNazwisko(osoba.nazwisko().toUpperCase()));
+        } else {
+            nazwiskoRepository.save(osoba);
+        }
     }
 
     public List<Nazwisko> pobierzWszystkich() {

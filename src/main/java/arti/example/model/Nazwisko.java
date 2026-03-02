@@ -25,4 +25,8 @@ public record Nazwisko(
         @Nullable
         @DateUpdated // Magia: Micronaut sam wstawi czas przed każdym UPDATE-em
         LocalDateTime biezaca
-) {}
+) {
+        public Nazwisko withNazwisko(String noweNazwisko) {
+                return new Nazwisko(id, imie, noweNazwisko, data, biezaca);
+        }
+}

@@ -1,10 +1,7 @@
 package arti.example.controller;
 
 import arti.example.model.Nazwisko;
-import io.micronaut.http.annotation.Body;
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.*;
 import arti.example.service.NazwiskoService;
 
 import java.util.List;
@@ -19,8 +16,8 @@ public class NazwiskoController {
     }
 
     @Post
-    public void add(@Body Nazwisko osoba) {
-        nazwiskoService.zapisz(osoba);
+    public void add(@Body Nazwisko osoba, @QueryValue(defaultValue = "false") boolean czyDuzymi) {
+        nazwiskoService.zapisz(osoba, czyDuzymi);
     }
 
     @Get

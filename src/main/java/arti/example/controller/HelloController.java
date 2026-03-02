@@ -1,4 +1,4 @@
-package arti.example;
+package arti.example.controller;
 
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;

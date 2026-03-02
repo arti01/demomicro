@@ -1,4 +1,4 @@
-package arti.example;
+package arti.example.model;
 
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.data.annotation.*;

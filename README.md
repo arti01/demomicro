@@ -1,3 +1,5 @@
+dodanie klienta
+
 curl -X POST http://localhost:8080/klienci \
 -H "Content-Type: application/json" \
 -d '{
@@ -5,13 +7,16 @@ curl -X POST http://localhost:8080/klienci \
 "email": "vimes@ankhmorpork.gov"
 }'
 
+pobranie klienta
 curl -X GET http://localhost:8080/klienci/2
 
 wszyscy klienci
 curl -X GET http://localhost:8080/klienci
 
+klient z transakcjami
 curl -X GET http://localhost:8080/klienci/z_transakcjami/2
 
+dodanie transakcji
 curl -X POST http://localhost:8080/transakcje \
 -H "Content-Type: application/json" \
 -d '{

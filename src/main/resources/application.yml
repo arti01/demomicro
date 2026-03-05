@@ -1,0 +1,32 @@
+micronaut:
+  application:
+    name: demomicro
+
+datasources:
+  default:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5434}/${DB_NAME:testy}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASS:pkkk}
+    driver-class-name: org.postgresql.Driver
+    db-type: postgres
+    dialect: POSTGRES
+    schema-generate: CREATE
+
+rabbitmq:
+  # Zmienne wyciągnięte osobno
+  username: ${RABBIT_USER:guest}
+  password: ${RABBIT_PASS:guest}
+  host: ${RABBIT_HOST:localhost}
+  port: ${RABBIT_PORT:5672}
+  virtual-host: ${RABBIT_VHOST:vtest}
+
+endpoints:
+  all:
+    enabled: false
+    sensitive: false
+  health:
+    enabled: true
+    sensitive: false
+  routes:
+    enabled: true
+    sensitive: false

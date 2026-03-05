@@ -19,9 +19,13 @@ dependencies {
     implementation("io.micronaut.data:micronaut-data-jdbc")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
     implementation("io.micronaut.sql:micronaut-jdbc-hikari")
+    implementation("io.micronaut:micronaut-management")
+    implementation("io.projectreactor:reactor-core")
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("org.postgresql:postgresql")
+    runtimeOnly("org.yaml:snakeyaml")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation("io.micronaut.rabbitmq:micronaut-rabbitmq")
 }
 
 

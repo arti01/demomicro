@@ -1,3 +1,26 @@
+curl -X POST http://localhost:8080/klienci \
+-H "Content-Type: application/json" \
+-d '{
+"nazwa": "Samuel Vimes",
+"email": "vimes@ankhmorpork.gov"
+}'
+
+curl -X GET http://localhost:8080/klienci/2
+
+curl -X GET http://localhost:8080/klienci/z_transakcjami/2
+
+curl -X POST http://localhost:8080/transakcje \
+-H "Content-Type: application/json" \
+-d '{
+"kwota": 120.50,
+"waluta": "PLN",
+"klient": {
+"id": 2
+}
+}'
+
+
+
 ## Micronaut 4.10.9 Documentation
 
 - [User Guide](https://docs.micronaut.io/4.10.9/guide/index.html)

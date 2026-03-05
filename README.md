@@ -7,6 +7,14 @@ curl -X POST http://localhost:8080/klienci \
 "email": "vimes@ankhmorpork.gov"
 }'
 
+curl -X POST https://demomicro.onrender.com/klienci \
+-H "Content-Type: application/json" \
+-d '{
+"nazwa": "Samuel Vimes",
+"email": "vimes@ankhmorpork.gov"
+}'
+
+
 pobranie klienta
 curl -X GET http://localhost:8080/klienci/2
 
@@ -28,6 +36,16 @@ curl -X POST http://localhost:8080/transakcje \
 }'
 
 curl -X POST http://localhost:8080/transakcje/zapis-do-kolejki \
+-H "Content-Type: application/json" \
+-d '{
+"kwota": 1500.50,
+"waluta": "PLN",
+"klient": {
+"id": 2
+}
+}'
+
+curl -X POST https://demomicro.onrender.com/transakcje/zapis-do-kolejki \
 -H "Content-Type: application/json" \
 -d '{
 "kwota": 1500.50,

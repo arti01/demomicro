@@ -6,6 +6,7 @@ import arti.example.repository.KlientRepository;
 import arti.example.repository.TransakcjaRepository;
 import io.micronaut.transaction.annotation.Transactional;
 import jakarta.inject.Singleton;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -35,8 +36,21 @@ public class KlientService {
     @Transactional // Ważne: zapewnia spójność przy pobieraniu powiązanych danych
     public Optional<KlientZTransakcjami> pobierzKlientaZTransakcjami(Long id) {
         return klientRepository.findById(id).map(klient -> {
-            List<Transakcja> transakcje = transakcjaRepository.findByKlientId(id);
-            return new KlientZTransakcjami(klient, transakcje);
+            // Pobieramy transakcje z bazy
+            List<Transakcja> listaZazyczna = transakcjaRepository.findByKlientId(id);
+
+            // Mapujemy "ciężkie" transakcje na "lekkie" rekordy
+            List<TransakcjaInfo> transakcjeInfo = listaZazyczna.stream()
+                    .map(t -> new TransakcjaInfo(t.id(), t.kwota(), t.waluta()))
+                    .toList();
+
+            // Składamy to w jeden, płaski obiekt
+            return new KlientZTransakcjami(
+                    klient.id(),
+                    klient.nazwa(),
+                    klient.email(),
+                    transakcjeInfo
+            );
         });
     }
 }

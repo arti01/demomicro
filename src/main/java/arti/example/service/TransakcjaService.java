@@ -3,9 +3,8 @@ package arti.example.service;
 import arti.example.model.Transakcja;
 import arti.example.rabbit.TransakcjaClient;
 import arti.example.repository.TransakcjaRepository;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import io.micronaut.transaction.annotation.Transactional;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class TransakcjaService {
@@ -18,7 +17,7 @@ public class TransakcjaService {
         this.transakcjaClient = transakcjaClient;
     }
 
-    @Transactional
+    @Transactional//zapisuje po prostu do bazy
     public Transakcja zapiszTransakcje(Transakcja transakcja) {
         // 1. Zapis do bazy
         Transakcja zapisana = transakcjaRepository.save(transakcja);
@@ -30,7 +29,12 @@ public class TransakcjaService {
         return zapisana;
     }
 
+    public void zlecZapisPrzezRabbit(Transakcja transakcja) {
+        transakcjaClient.zlecZapis(transakcja).subscribe();
+    }
+
     public Iterable<Transakcja> pobierzWszystkie() {
         return transakcjaRepository.findAll();
     }
+
 }

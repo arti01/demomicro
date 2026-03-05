@@ -2,8 +2,9 @@ package arti.example.controller;
 
 import arti.example.model.Transakcja;
 import arti.example.service.TransakcjaService;
-import io.micronaut.http.annotation.*;
+import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
+import io.micronaut.http.annotation.*;
 
 @Controller("/transakcje")
 public class TransakcjaController {
@@ -14,10 +15,16 @@ public class TransakcjaController {
         this.transakcjaService = transakcjaService;
     }
 
-    @Post
+    @Post//zapisuje pojedyncza do bazy
     @Status(HttpStatus.CREATED)
     public Transakcja dodaj(@Body Transakcja transakcja) {
         return transakcjaService.zapiszTransakcje(transakcja);
+    }
+
+    @Post("/zapis-do-kolejki")
+    public HttpResponse<String> testowyZapis(@Body Transakcja transakcja) {
+        transakcjaService.zlecZapisPrzezRabbit(transakcja);
+        return HttpResponse.ok("Zlecenie przyjęte do procesowania.");
     }
 
     @Get

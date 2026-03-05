@@ -3,8 +3,9 @@ package arti.example.controller;
 import arti.example.model.Klient;
 import arti.example.service.KlientService;
 import arti.example.service.KlientZTransakcjami;
-import io.micronaut.http.annotation.*;
 import io.micronaut.http.HttpStatus;
+import io.micronaut.http.annotation.*;
+
 import java.util.Optional;
 
 @Controller("/klienci")

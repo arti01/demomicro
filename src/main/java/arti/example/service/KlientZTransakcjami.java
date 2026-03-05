@@ -1,10 +1,13 @@
 package arti.example.service;
 
-import arti.example.model.Klient;
-import arti.example.model.Transakcja;
+import io.micronaut.serde.annotation.Serdeable;
 
 import java.util.List;
 
-// Prosty rekord pomocniczy (DTO), żeby ładnie zwrócić JSON-a
-@io.micronaut.serde.annotation.Serdeable
-public record KlientZTransakcjami(Klient klient, List<Transakcja> transakcje) {}
+@Serdeable
+public record KlientZTransakcjami(
+        Long id,
+        String nazwa,
+        String email,
+        List<TransakcjaInfo> transakcje
+) {}

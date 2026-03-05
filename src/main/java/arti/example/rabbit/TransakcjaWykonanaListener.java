@@ -14,7 +14,7 @@ public class TransakcjaWykonanaListener {
     @Queue("transakcje-wykonane") // Tu wpisz nazwę kolejki, którą stworzyliśmy w RabbitConfig
     public void odbierzTransakcje(Transakcja transakcja) {
         // To się wykona automatycznie, gdy tylko wiadomość pojawi się w kolejce
-        LOG.info("📢 ODEBRANO WIADOMOŚĆ Z KOLEJKI!");
+        LOG.info("📢 ODEBRANO WIADOMOŚĆ Z KOLEJKI O ZAPISANIU TRANSAKCJI!");
         LOG.info("Kwota: {} {}", transakcja.kwota(), transakcja.waluta());
         LOG.info("ID Transakcji w bazie: {}", transakcja.id());
         LOG.info("ID Klienta w bazie: {}", transakcja.klient().id());

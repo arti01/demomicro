@@ -19,6 +19,16 @@ curl -X POST http://localhost:8080/transakcje \
 }
 }'
 
+curl -X POST http://localhost:8080/transakcje/zapis-do-kolejki \
+-H "Content-Type: application/json" \
+-d '{
+"kwota": 1500.50,
+"waluta": "PLN",
+"klient": {
+"id": 2
+}
+}'
+
 
 
 ## Micronaut 4.10.9 Documentation

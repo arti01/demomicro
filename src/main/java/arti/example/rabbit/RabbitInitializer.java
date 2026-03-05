@@ -3,6 +3,7 @@ package arti.example.rabbit;
 import com.rabbitmq.client.Channel;
 import io.micronaut.rabbitmq.connect.ChannelInitializer;
 import jakarta.inject.Singleton;
+
 import java.io.IOException;
 
 @Singleton

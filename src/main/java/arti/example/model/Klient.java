@@ -1,8 +1,12 @@
 package arti.example.model;
 
-import io.micronaut.data.annotation.*;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.data.annotation.GeneratedValue;
+import io.micronaut.data.annotation.Id;
+import io.micronaut.data.annotation.MappedEntity;
+import io.micronaut.data.annotation.Relation;
 import io.micronaut.serde.annotation.Serdeable;
+
 import java.util.Set;
 
 @Serdeable

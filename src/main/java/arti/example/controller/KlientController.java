@@ -27,11 +27,13 @@ public class KlientController {
     public Iterable<Klient> listuj() {
         return klientService.pobierzWszystkich();
     }
+
     @Get("/{id}")
     public Optional<Klient> pobierzPodstawoweDane(Long id) {
         // Tu korzystasz z repozytorium bezpośrednio lub przez serwis (klientRepository.findById(id))
         return klientService.pobierzPoId(id);
     }
+
     @Get("/z_transakcjami/{id}")
     public Optional<KlientZTransakcjami> pobierzPelnyProfil(Long id) {
         return klientService.pobierzKlientaZTransakcjami(id);

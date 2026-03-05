@@ -7,6 +7,9 @@ curl -X POST http://localhost:8080/klienci \
 
 curl -X GET http://localhost:8080/klienci/2
 
+wszyscy klienci
+curl -X GET http://localhost:8080/klienci
+
 curl -X GET http://localhost:8080/klienci/z_transakcjami/2
 
 curl -X POST http://localhost:8080/transakcje \

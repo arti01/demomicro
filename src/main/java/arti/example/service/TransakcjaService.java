@@ -5,10 +5,14 @@ import arti.example.rabbit.TransakcjaClient;
 import arti.example.repository.TransakcjaRepository;
 import io.micronaut.transaction.annotation.Transactional;
 import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @Singleton
 public class TransakcjaService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(TransakcjaService.class);
     private final TransakcjaRepository transakcjaRepository;
     private final TransakcjaClient transakcjaClient;
 
@@ -17,16 +21,24 @@ public class TransakcjaService {
         this.transakcjaClient = transakcjaClient;
     }
 
-    @Transactional//zapisuje po prostu do bazy
+    @Transactional
     public Transakcja zapiszTransakcje(Transakcja transakcja) {
-        // 1. Zapis do bazy
-        Transakcja zapisana = transakcjaRepository.save(transakcja);
+        try {
+            Transakcja zapisana = transakcjaRepository.save(transakcja);
 
-        // 2. WYSYŁKA NA RABBITA
-        transakcjaClient.wyslijTransakcje(zapisana)
-                .doOnError(e -> System.err.println("Błąd wysyłki na RabbitMQ: " + e.getMessage()))
-                .subscribe();
-        return zapisana;
+            // Sukces - wysyłamy raport
+            transakcjaClient.wyslijRaport(new TransakcjaRaport(zapisana, true, "OK")).subscribe();
+            return zapisana;
+
+        } catch (Exception e) {
+            // Błąd - wysyłamy raport o porażce
+            LOG.error("🚨 Przechwycono błąd bazy: {}", e.getMessage());
+            transakcjaClient.wyslijRaport(new TransakcjaRaport(transakcja, false, e.getMessage())).subscribe();
+
+            // ZAMIAST throw e; -> Zwróć null lub rzuć własny, kontrolowany wyjątek,
+            // ale pamiętaj, że Listener i tak to zaloguje jako błąd, jeśli go tam nie złapiesz.
+            return null;
+        }
     }
 
     public void zlecZapisPrzezRabbit(Transakcja transakcja) {

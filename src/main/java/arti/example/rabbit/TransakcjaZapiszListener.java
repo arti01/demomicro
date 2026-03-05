@@ -24,6 +24,11 @@ public class TransakcjaZapiszListener {
         // Wywołujemy nasz istniejący serwis
         Transakcja zapisana = transakcjaService.zapiszTransakcje(transakcja);
 
+        if (zapisana == null) {
+            LOG.warn("⚠️ Nie udało się zapisać transakcji (szczegóły w logach serwisu)");
+            return; // Kończymy metodę bezpiecznie, bez rzucania błędu wyżej
+        }
+
         LOG.info("✅ Transakcja zlecenia zapisana pomyślnie z ID: {}", zapisana.id());
     }
 }

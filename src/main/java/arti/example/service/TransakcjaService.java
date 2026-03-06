@@ -3,6 +3,8 @@ package arti.example.service;
 import arti.example.model.Transakcja;
 import arti.example.rabbit.TransakcjaClient;
 import arti.example.repository.TransakcjaRepository;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.micronaut.transaction.annotation.Transactional;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
@@ -27,13 +29,13 @@ public class TransakcjaService {
             Transakcja zapisana = transakcjaRepository.save(transakcja);
 
             // Sukces - wysyłamy raport
-            transakcjaClient.wyslijRaport(new TransakcjaRaport(zapisana, true, "OK")).subscribe();
+            transakcjaClient.wyslijRaport(new TransakcjaRaport(zapisana, true, "OK"));
             return zapisana;
 
         } catch (Exception e) {
             // Błąd - wysyłamy raport o porażce
             LOG.error("🚨 Przechwycono błąd bazy: {}", e.getMessage());
-            transakcjaClient.wyslijRaport(new TransakcjaRaport(transakcja, false, e.getMessage())).subscribe();
+            transakcjaClient.wyslijRaport(new TransakcjaRaport(transakcja, false, e.getMessage()));
 
             // ZAMIAST throw e; -> Zwróć null lub rzuć własny, kontrolowany wyjątek,
             // ale pamiętaj, że Listener i tak to zaloguje jako błąd, jeśli go tam nie złapiesz.
@@ -42,7 +44,7 @@ public class TransakcjaService {
     }
 
     public void zlecZapisPrzezRabbit(Transakcja transakcja) {
-        transakcjaClient.zlecZapis(transakcja).subscribe();
+        transakcjaClient.zlecZapis(transakcja);
     }
 
     @Transactional(readOnly = true)

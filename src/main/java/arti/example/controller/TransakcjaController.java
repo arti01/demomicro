@@ -5,6 +5,8 @@ import arti.example.service.TransakcjaService;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.annotation.*;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.annotation.ExecuteOn;
 
 @Controller("/transakcje")
 public class TransakcjaController {
@@ -17,10 +19,12 @@ public class TransakcjaController {
 
     @Post//zapisuje pojedyncza do bazy
     @Status(HttpStatus.CREATED)
+    @ExecuteOn(TaskExecutors.BLOCKING)
     public Transakcja dodaj(@Body Transakcja transakcja) {
         return transakcjaService.zapiszTransakcje(transakcja);
     }
 
+    @ExecuteOn(TaskExecutors.BLOCKING)
     @Post("/zapis-do-kolejki")
     public HttpResponse<String> testowyZapis(@Body Transakcja transakcja) {
         transakcjaService.zlecZapisPrzezRabbit(transakcja);

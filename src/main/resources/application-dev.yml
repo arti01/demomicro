@@ -30,3 +30,14 @@ endpoints:
   routes:
     enabled: true
     sensitive: false
+
+shedlock:
+  defaults:
+    lock-at-most-for: 20m
+    lock-at-least-for: 1m
+
+moje-zadania:
+  raport-statusu:
+    interwal: 1m
+  raport-transakcji:
+    interwal: 2m

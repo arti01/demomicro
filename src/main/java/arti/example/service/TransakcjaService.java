@@ -45,8 +45,13 @@ public class TransakcjaService {
         transakcjaClient.zlecZapis(transakcja).subscribe();
     }
 
+    @Transactional(readOnly = true)
     public Iterable<Transakcja> pobierzWszystkie() {
         return transakcjaRepository.findAll();
     }
 
+    @Transactional(readOnly = true) // readOnly przyspiesza operacje tylko do odczytu i może kierowac na wezel slave
+    public long policzWszystkieTransakcje() {
+        return transakcjaRepository.count();
+    }
 }

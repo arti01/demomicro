@@ -25,15 +25,17 @@ public class KlientService {
         return klientRepository.save(klient);
     }
 
+    @Transactional(readOnly = true)
     public Iterable<Klient> pobierzWszystkich() {
         return klientRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public Optional<Klient> pobierzPoId(Long id) {
         return klientRepository.findById(id);
     }
 
-    @Transactional // Ważne: zapewnia spójność przy pobieraniu powiązanych danych
+    @Transactional(readOnly = true) // Ważne: zapewnia spójność przy pobieraniu powiązanych danych
     public Optional<KlientZTransakcjami> pobierzKlientaZTransakcjami(Long id) {
         return klientRepository.findById(id).map(klient -> {
             // Pobieramy transakcje z bazy
@@ -41,7 +43,7 @@ public class KlientService {
 
             // Mapujemy "ciężkie" transakcje na "lekkie" rekordy
             List<TransakcjaInfo> transakcjeInfo = listaZazyczna.stream()
-                    .map(t -> new TransakcjaInfo(t.id(), t.kwota(), t.waluta()))
+                    .map(t -> new TransakcjaInfo(t.id(), t.kwota(), t.waluta(), t.czas()))
                     .toList();
 
             // Składamy to w jeden, płaski obiekt
@@ -54,4 +56,3 @@ public class KlientService {
         });
     }
 }
-

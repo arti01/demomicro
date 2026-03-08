@@ -35,4 +35,5 @@ public class TransakcjaController {
     public Iterable<Transakcja> listuj() {
         return transakcjaService.pobierzWszystkie();
     }
+    
 }

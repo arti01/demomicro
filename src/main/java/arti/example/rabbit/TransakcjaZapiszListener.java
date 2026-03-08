@@ -4,10 +4,12 @@ import arti.example.model.Transakcja;
 import arti.example.service.TransakcjaService;
 import io.micronaut.rabbitmq.annotation.Queue;
 import io.micronaut.rabbitmq.annotation.RabbitListener;
+import io.micronaut.rabbitmq.annotation.Binding;
+import io.micronaut.messaging.MessageHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@RabbitListener
+@RabbitListener()
 public class TransakcjaZapiszListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(TransakcjaZapiszListener.class);

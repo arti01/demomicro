@@ -2,6 +2,7 @@ package arti.example.service;
 
 import arti.example.model.Transakcja;
 import arti.example.rabbit.TransakcjaClient;
+import arti.example.repository.TransakcjaBulkRepository;
 import arti.example.repository.TransakcjaRepository;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
@@ -10,6 +11,8 @@ import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 
 @Singleton
 public class TransakcjaService {
@@ -17,10 +20,12 @@ public class TransakcjaService {
     private static final Logger LOG = LoggerFactory.getLogger(TransakcjaService.class);
     private final TransakcjaRepository transakcjaRepository;
     private final TransakcjaClient transakcjaClient;
+    private TransakcjaBulkRepository bulkRepo;
 
-    public TransakcjaService(TransakcjaRepository transakcjaRepository, TransakcjaClient transakcjaClient) {
+    public TransakcjaService(TransakcjaRepository transakcjaRepository, TransakcjaClient transakcjaClient, TransakcjaBulkRepository bulkRepo) {
         this.transakcjaRepository = transakcjaRepository;
         this.transakcjaClient = transakcjaClient;
+        this.bulkRepo = bulkRepo;
     }
 
     @Transactional
@@ -41,6 +46,10 @@ public class TransakcjaService {
             // ale pamiętaj, że Listener i tak to zaloguje jako błąd, jeśli go tam nie złapiesz.
             return null;
         }
+    }
+
+    public void procesujWszystko(List<Transakcja> dane) {
+        bulkRepo.saveAllFast(dane);
     }
 
     public void zlecZapisPrzezRabbit(Transakcja transakcja) {

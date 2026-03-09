@@ -19,7 +19,7 @@ public class TransakcjaZapiszListener {
         this.transakcjaService = transakcjaService;
     }
 
-    @Queue("transakcje-do_wykonania")
+    @Queue(value = "transakcje-do_wykonania", prefetch = 100)
     public void wykonajZapis(Transakcja transakcja) {
         LOG.info("📥 Otrzymano zlecenie zapisu transakcji przez RabbitMQ!");
 

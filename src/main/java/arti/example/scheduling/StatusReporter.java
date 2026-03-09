@@ -31,7 +31,7 @@ public class StatusReporter {
         LOG.info("📊 STATUS: RabbitMQ i Postgres pod kontrolą.");
     }
 
-    @Scheduled(fixedDelay = "${moje-zadania.raport-transakcji.interwal:10m}")
+    //@Scheduled(fixedDelay = "${moje-zadania.raport-transakcji.interwal:10m}")
     @SchedulerLock(name = "raportujIloscTransakcji", lockAtMostFor = "10m", lockAtLeastFor = "1m")
     @Transactional
     void raportujIloscTransakcji() {

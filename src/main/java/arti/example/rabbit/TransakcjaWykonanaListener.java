@@ -18,11 +18,11 @@ public class TransakcjaWykonanaListener {
         Transakcja t = raport.transakcja();
 
         if (raport.sukces()) {
-            LOG.info("✅ SUKCES: Odebrano raport o udanej transakcji!");
-            LOG.info("Kwota: {} {}", t.kwota(), t.waluta());
-            LOG.info("ID Klienta: {}", t.klient().id());
-            LOG.info("ID Transakcji i czas: {} {}", t.id(), t.czas());
-            LOG.info("Status: {}", raport.wiadomoscBledu()); // Tu będzie nasze "OK"
+            //LOG.info("✅ SUKCES: Odebrano raport o udanej transakcji!");
+            //LOG.info("Kwota: {} {}", t.kwota(), t.waluta());
+            //LOG.info("ID Klienta: {}", t.klient().id());
+            //LOG.info("ID Transakcji i czas: {} {}", t.id(), t.czas());
+            //LOG.info("Status: {}", raport.wiadomoscBledu()); // Tu będzie nasze "OK"
         } else {
             LOG.warn("❌ ALARM: Odebrano raport o BŁĘDZIE zapisu!");
             LOG.error("Powód błędu: {}", raport.wiadomoscBledu());

@@ -2,6 +2,7 @@ package arti.example.rabbit;
 
 import arti.example.model.Transakcja;
 import arti.example.service.TransakcjaService;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.rabbitmq.annotation.Queue;
 import io.micronaut.rabbitmq.annotation.RabbitListener;
 import io.micronaut.rabbitmq.annotation.Binding;
@@ -9,6 +10,7 @@ import io.micronaut.messaging.MessageHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Requires(notEnv = "dev")
 @RabbitListener()
 public class TransakcjaZapiszListener {
 
@@ -21,7 +23,7 @@ public class TransakcjaZapiszListener {
 
     @Queue(value = "transakcje-do_wykonania", prefetch = 100)
     public void wykonajZapis(Transakcja transakcja) {
-        LOG.info("📥 Otrzymano zlecenie zapisu transakcji przez RabbitMQ!");
+        //LOG.info("📥 Otrzymano zlecenie zapisu transakcji przez RabbitMQ!");
 
         // Wywołujemy nasz istniejący serwis
         Transakcja zapisana = transakcjaService.zapiszTransakcje(transakcja);

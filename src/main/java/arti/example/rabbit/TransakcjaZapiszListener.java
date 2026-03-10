@@ -5,12 +5,10 @@ import arti.example.service.TransakcjaService;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.rabbitmq.annotation.Queue;
 import io.micronaut.rabbitmq.annotation.RabbitListener;
-import io.micronaut.rabbitmq.annotation.Binding;
-import io.micronaut.messaging.MessageHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Requires(notEnv = "dev")
+@Requires(notEnv = "dev")//wylaczony, aby nie podbierał baczowi
 @RabbitListener()
 public class TransakcjaZapiszListener {
 

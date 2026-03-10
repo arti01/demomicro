@@ -24,24 +24,38 @@ public class RabbitProducerTransakcjeTest {
 
     @Test
     void wyslijPaczkeDoRabbita() {
-        int liczbaWiadomosci = 30000;
-        System.out.println("🚀 Przygotowanie do wysyłki " + liczbaWiadomosci + " wiadomości...");
+        int liczbaWiadomosci = 20270;
+        System.out.println("🚀 Przygotowanie do wysyłki " + liczbaWiadomosci + " wiadomości z sabotażystami...");
 
-        @NonNull Optional<Klient> klient=klientRepository.findById(Long.valueOf(2));
+        // Prawidłowy klient
+        @NonNull Optional<Klient> klientOk = klientRepository.findById(2L);
 
-        for (int i = 0; i < liczbaWiadomosci; i++) {
+        // Tworzymy obiekt-ducha (klient o ID 99, który nie istnieje w bazie)
+        // To wywoła błąd naruszenia klucza obcego (Foreign Key Violation)
+        Klient klientFalszywy = new Klient(99L, "Nieistniejący", "Sabotażysta", null);
+        int iloscSabot = 0;
+
+        for (int i = 1; i <= liczbaWiadomosci; i++) {
+            Klient wybranyKlient;
+
+            // Co 3000 rekord wrzucamy sabotażystę
+            if (i % 3000 == 0) {
+                wybranyKlient = klientFalszywy;
+                System.out.println("🧨 Dodano sabotażystę do paczki (rekord nr: " + i + ")");
+                iloscSabot++;
+            } else {
+                wybranyKlient = klientOk.orElse(null);
+            }
+
             Transakcja t = new Transakcja(
                     null,
                     new BigDecimal("97.99"),
                     "PLN",
                     Instant.now(),
-                    klient.orElse(null)
+                    wybranyKlient
             );
-
-            // Wysyłamy na kolejkę "transakcje-do_wykonania"
             transakcjaClient.zlecZapis(t);
         }
-
-        System.out.println("✅ Wszystkie wiadomości zostały przekazane do brokera RabbitMQ.");
+        System.out.println("✅ Wszystkie wiadomości (w tym " + iloscSabot + " sabotażystów) są w RabbitMQ.");
     }
 }

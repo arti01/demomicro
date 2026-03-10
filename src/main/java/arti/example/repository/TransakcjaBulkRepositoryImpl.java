@@ -1,11 +1,17 @@
 package arti.example.repository;
 
 import arti.example.model.Transakcja;
-import io.micronaut.transaction.annotation.ReadOnly;
+import arti.example.rabbit.TransakcjaClient;
+import arti.example.scheduling.StatusReporter;
+import arti.example.service.SaperService;
+import arti.example.service.TransakcjaRaport;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.postgresql.PGConnection;
 import org.postgresql.copy.CopyManager;
 import org.postgresql.core.BaseConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.io.PipedInputStream;
@@ -20,10 +26,40 @@ import java.util.stream.Collectors;
 public class TransakcjaBulkRepositoryImpl implements TransakcjaBulkRepository {
 
     private final DataSource dataSource;
+    private final TransakcjaRepository standardRepo; // Wstrzykujemy sapera
+    private static final Logger LOG = LoggerFactory.getLogger(TransakcjaBulkRepositoryImpl.class);
 
-    // Micronaut sam dostarczy nam DataSource
-    public TransakcjaBulkRepositoryImpl(DataSource dataSource) {
+    public TransakcjaBulkRepositoryImpl(DataSource dataSource, TransakcjaRepository standardRepo) {
         this.dataSource = dataSource;
+        this.standardRepo = standardRepo;
+    }
+
+    @Inject
+    SaperService saper; // Wstrzyknij go!
+
+    @Override
+    public void saveAllSafe(List<Transakcja> lista, TransakcjaClient client) {
+        try {
+            saveAllFast(lista); // 1. Taran próbuje...
+
+            // Jeśli przeszło, meldujemy sukces dla wszystkich
+            lista.forEach(t -> client.wyslijRaportOK(new TransakcjaRaport(t, "OK")));
+
+        } catch (Exception e) {
+            LOG.error("🚨 Taran zablokowany! Saper rozbraja bombę...");
+
+            for (Transakcja t : lista) {
+                try {
+                    saper.uratujRekord(t); // 2. Saper ratuje...
+                    // Jeśli uratował - meldujemy sukces dla tego jednego
+                    client.wyslijRaportOK(new TransakcjaRaport(t, "OK"));
+                } catch (Exception ex) {
+                    // 3. SABOTAŻYSTA!
+                    LOG.error("❌ Prawdziwy sabotażysta ID={}: {}", t.id(), ex.getMessage());
+                    client.wyslijRaportBlad(new TransakcjaRaport(t, ex.getMessage()));
+                }
+            }
+        }
     }
 
     @Override

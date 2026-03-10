@@ -13,10 +13,12 @@ public class RabbitInitializer extends ChannelInitializer {
 
         channel.exchangeDeclare("exchange-transakcje", "topic", true);
         // To polecenie fizycznie tworzy kolejkę w RabbitMQ:
-        channel.queueDeclare("transakcje-wykonane", true, false, false, null);
+        channel.queueDeclare("transakcje-wykonane_poprawnie", true, false, false, null);
+        channel.queueDeclare("transakcje-wykonane_blednie", true, false, false, null);
         channel.queueDeclare("transakcje-do_wykonania", true, false, false, null);
 
-        channel.queueBind("transakcje-wykonane", "exchange-transakcje", "nowa-transakcja");
+        channel.queueBind("transakcje-wykonane_poprawnie", "exchange-transakcje", "transakcja-ok");
+        channel.queueBind("transakcje-wykonane_blednie", "exchange-transakcje", "transakcja-blad");
         channel.queueBind("transakcje-do_wykonania", "exchange-transakcje", "zapisz-transakcje");
     }
 }

@@ -6,6 +6,5 @@ import io.micronaut.serde.annotation.Serdeable;
 @Serdeable
 public record TransakcjaRaport(
         Transakcja transakcja,
-        boolean sukces,
         String wiadomoscBledu
 ) {}

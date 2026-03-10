@@ -1,6 +1,7 @@
 package arti.example;
 
 import arti.example.model.Transakcja;
+import arti.example.rabbit.TransakcjaClient;
 import arti.example.repository.TransakcjaBulkRepository;
 import io.micronaut.rabbitmq.annotation.Queue;
 import io.micronaut.rabbitmq.annotation.RabbitListener;
@@ -16,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 @MicronautTest(environments = "dev")
 @RabbitListener
@@ -26,6 +26,9 @@ public class BatchListenerTest {
 
     @Inject
     TransakcjaBulkRepository bulkRepository;
+
+    @Inject
+    TransakcjaClient transakcjaClient; // Micronaut sam go tu podstawi
 
     private final List<Transakcja> buffer = Collections.synchronizedList(new ArrayList<>());
     private final int BATCH_SIZE = 1000;
@@ -54,17 +57,23 @@ public class BatchListenerTest {
         }
     }
 
-    @Transactional
     void flush(String powod) {
-        synchronized(this) {
+        // 2. Synchronizujemy się na buforze (konsekwentnie z resztą kodu)
+        synchronized(buffer) {
             if (buffer.isEmpty()) return;
 
-            int rozmiar = buffer.size();
             List<Transakcja> paczka = new ArrayList<>(buffer);
             buffer.clear();
 
-            LOG.info("🚀 Akcja [{}]: Zapisuję {} transakcji...", powod, rozmiar);
-            bulkRepository.saveAllFast(paczka);
+            LOG.info("🚀 Akcja [{}]: Przekazuję {} transakcji do bazy...", powod, paczka.size());
+
+            try {
+                // 3. Przekazujemy paczkę ORAZ klienta (gołębia pocztowego)
+                bulkRepository.saveAllSafe(paczka, transakcjaClient);
+            } catch (Exception e) {
+                // To jest "siatka bezpieczeństwa ostatniej szansy"
+                LOG.error("💥 Nieoczekiwany błąd w koordynatorze flush: {}", e.getMessage());
+            }
         }
     }
 

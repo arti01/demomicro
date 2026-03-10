@@ -52,6 +52,13 @@ rabbitmq:
   host: ${RABBIT_HOST:localhost}
   port: ${RABBIT_PORT:5672}
   virtual-host: ${RABBIT_VHOST:vtest}
+  listener:
+    transakcje:
+      # To jest nasz główny "suwak" sterujący
+      batch-size: 100
+  consumers:
+    transakcje-listener: # To jest ID, które nadamy w kodzie
+      prefetch: ${rabbitmq.listener.transakcje.batch-size}
 
 endpoints:
   all:

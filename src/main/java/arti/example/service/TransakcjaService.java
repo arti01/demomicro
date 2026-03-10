@@ -34,22 +34,18 @@ public class TransakcjaService {
             Transakcja zapisana = transakcjaRepository.save(transakcja);
 
             // Sukces - wysyłamy raport
-            transakcjaClient.wyslijRaport(new TransakcjaRaport(zapisana, true, "OK"));
+            transakcjaClient.wyslijRaportOK(new TransakcjaRaport(zapisana, "OK"));
             return zapisana;
 
         } catch (Exception e) {
             // Błąd - wysyłamy raport o porażce
             LOG.error("🚨 Przechwycono błąd bazy: {}", e.getMessage());
-            transakcjaClient.wyslijRaport(new TransakcjaRaport(transakcja, false, e.getMessage()));
+            transakcjaClient.wyslijRaportBlad(new TransakcjaRaport(transakcja, e.getMessage()));
 
             // ZAMIAST throw e; -> Zwróć null lub rzuć własny, kontrolowany wyjątek,
             // ale pamiętaj, że Listener i tak to zaloguje jako błąd, jeśli go tam nie złapiesz.
             return null;
         }
-    }
-
-    public void procesujWszystko(List<Transakcja> dane) {
-        bulkRepo.saveAllFast(dane);
     }
 
     public void zlecZapisPrzezRabbit(Transakcja transakcja) {

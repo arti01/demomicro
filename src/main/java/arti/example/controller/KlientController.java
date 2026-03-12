@@ -15,7 +15,6 @@ public class KlientController {
 
     public KlientController(KlientService klientService) {
         this.klientService = klientService;
-
     }
 
     @Post

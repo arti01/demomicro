@@ -8,7 +8,7 @@ import io.micronaut.rabbitmq.annotation.RabbitListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Requires(notEnv = "dev")//wylaczony, aby nie podbierał baczowi
+@Requires(env = "ttt")//wylaczony, aby nie podbierał baczowi
 @RabbitListener()
 public class TransakcjaZapiszListener {
 

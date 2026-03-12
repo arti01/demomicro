@@ -11,7 +11,7 @@ import jakarta.inject.Singleton;
 
 @Requires(notEnv = "ttt")
 @Singleton
-@RabbitListener
+@RabbitListener()
 public class BatchTransakcjaListener {
 
     private final BatchTransakcjaService batchService;
@@ -20,7 +20,7 @@ public class BatchTransakcjaListener {
         this.batchService = batchService;
     }
 
-    @Queue(value = "transakcje-do_wykonania")
+    @Queue(value = "transakcje-do_wykonania", prefetch = 100)
     public void onMessage(Transakcja transakcja) {
         batchService.addToBuffer(transakcja);
     }

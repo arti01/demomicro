@@ -56,9 +56,6 @@ rabbitmq:
     transakcje:
       # To jest nasz główny "suwak" sterujący
       batch-size: 100
-  consumers:
-    transakcje-listener: # To jest ID, które nadamy w kodzie
-      prefetch: ${rabbitmq.listener.transakcje.batch-size}
 
 endpoints:
   all:

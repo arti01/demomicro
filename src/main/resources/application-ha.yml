@@ -1,0 +1,91 @@
+micronaut:
+  application:
+    name: demomicro
+
+datasources:
+  default:
+    url: "jdbc:postgresql://stacja:5434,localhost:5432,localhost:5436/testy"
+    username: ${DB_USER:postgres}
+    password: ${DB_PASS:pkkk}
+    driver-class-name: org.postgresql.Driver
+    db-type: postgres
+    dialect: POSTGRES
+    schema-generate: CREATE
+    # Hikari
+    maximum-pool-size: 10
+    minimum-idle: 5
+    max-lifetime: 300000
+    #ten timeout dotyczny otwierania nowych wątków w hikart, jesli pula jest zbyt mała
+    connection-timeout: 5000
+    validation-timeout: 5000
+    connection-test-query: "SELECT 1"
+    # Driver Properties
+    data-source-properties:
+      targetServerType: ${DB_TARGET_TYPE:preferPrimary}
+      hostRecheckSeconds: 5
+      tcpKeepAlive: true
+      #ten timeout dotyczny otwierania nowych polaczen do bazy
+      connectTimeout: ${DB_CONNECT_TIMEOUT:5}
+      socketTimeout: ${DB_SOCKET_TIMEOUT:30}
+
+  slave:
+    url: "jdbc:postgresql://localhost:5432,localhost:5436,stacja:5434/testy"
+    username: ${DB_USER:postgres}
+    password: ${DB_PASS:pkkk}
+    driver-class-name: org.postgresql.Driver
+    db-type: postgres
+    dialect: POSTGRES
+    schema-generate: NONE
+    read-only: true
+    # Hikari
+    maximum-pool-size: 15
+    minimum-idle: 5
+    max-lifetime: 300000
+    connection-timeout: 5000
+    validation-timeout: 5000
+    connection-test-query: "SELECT 1"
+    # Driver Properties
+    data-source-properties:
+      targetServerType: ${DB_SLAVE_TARGET_TYPE:preferSecondary}
+      hostRecheckSeconds: 5
+      tcpKeepAlive: true
+      connectTimeout: ${DB_CONNECT_TIMEOUT:5}
+      socketTimeout: ${DB_SOCKET_TIMEOUT:30}
+
+rabbitmq:
+  # Zmienne wyciągnięte osobno
+  username: ${RABBIT_USER:guest}
+  password: ${RABBIT_PASS:guest}
+  host: ${RABBIT_HOST:localhost}
+  port: ${RABBIT_PORT:5672}
+  virtual-host: ${RABBIT_VHOST:vtest}
+
+  listener:
+    transakcje:
+      # To jest nasz główny "suwak" sterujący
+      batch-size: 100
+  consumers:
+    transakcje-listener: # To jest ID, które nadamy w kodzie
+      prefetch: ${rabbitmq.listener.transakcje.batch-size}
+
+endpoints:
+  all:
+    enabled: false
+    sensitive: false
+  health:
+    enabled: true
+    sensitive: false
+  routes:
+    enabled: true
+    sensitive: false
+
+shedlock:
+  defaults:
+    lock-at-most-for: 20m
+    lock-at-least-for: 1m
+
+moje-zadania:
+  raport-statusu:
+    interwal: 1m
+  raport-transakcji:
+    interwal: 2m

@@ -37,7 +37,8 @@ public class BatchTransakcjaService {
         }
     }
 
-    @Scheduled(fixedDelay = "10s")
+    @Scheduled(fixedDelay = "30s")
+    @Transactional
     void periodicFlush() {
         flush("ZEGARMISTRZ (CZAS)");
     }

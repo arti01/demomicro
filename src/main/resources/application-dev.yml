@@ -52,6 +52,11 @@ rabbitmq:
   host: ${RABBIT_HOST:localhost}
   port: ${RABBIT_PORT:5672}
   virtual-host: ${RABBIT_VHOST:vtest}
+  #username: rkzowxnc
+  #password: eHjZGfeBia-GQeVE0JmX-UZo09lfMsNU
+  #host: kebnekaise.lmq.cloudamqp.com
+  #port: 5672
+  #virtual-host: rkzowxnc
   listener:
     transakcje:
       # To jest nasz główny "suwak" sterujący

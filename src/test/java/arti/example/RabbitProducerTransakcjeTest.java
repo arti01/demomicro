@@ -24,7 +24,7 @@ public class RabbitProducerTransakcjeTest {
 
     @Test
     void wyslijPaczkeDoRabbita() {
-        int liczbaWiadomosci = 20270;
+        int liczbaWiadomosci = 17270;
         System.out.println("🚀 Przygotowanie do wysyłki " + liczbaWiadomosci + " wiadomości z sabotażystami...");
 
         // Prawidłowy klient

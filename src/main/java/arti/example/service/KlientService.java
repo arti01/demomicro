@@ -2,8 +2,11 @@ package arti.example.service;
 
 import arti.example.model.Klient;
 import arti.example.model.Transakcja;
+import arti.example.repository.KlientReadOnlyRepository;
 import arti.example.repository.KlientRepository;
+import arti.example.repository.TransakcjaReadOnlyRepository;
 import arti.example.repository.TransakcjaRepository;
+import io.micronaut.data.annotation.Repository;
 import io.micronaut.transaction.annotation.Transactional;
 import jakarta.inject.Singleton;
 
@@ -14,11 +17,15 @@ import java.util.Optional;
 public class KlientService {
 
     private final KlientRepository klientRepository;
+    private final KlientReadOnlyRepository klientRepositoryRO;
     private final TransakcjaRepository transakcjaRepository;
+    private final TransakcjaReadOnlyRepository transakcjaRepositoryRO;
 
-    public KlientService(KlientRepository klientRepository, TransakcjaRepository transakcjaRepository) {
+    public KlientService(KlientRepository klientRepository, KlientReadOnlyRepository klientRepositoryRO, TransakcjaRepository transakcjaRepository, TransakcjaReadOnlyRepository transakcjaRepositoryRO) {
         this.klientRepository = klientRepository;
+        this.klientRepositoryRO = klientRepositoryRO;
         this.transakcjaRepository = transakcjaRepository;
+        this.transakcjaRepositoryRO = transakcjaRepositoryRO;
     }
 
     public Klient zapiszKlienta(Klient klient) {
@@ -37,9 +44,9 @@ public class KlientService {
 
     @Transactional(readOnly = true) // Ważne: zapewnia spójność przy pobieraniu powiązanych danych
     public Optional<KlientZTransakcjami> pobierzKlientaZTransakcjami(Long id) {
-        return klientRepository.findById(id).map(klient -> {
+        return klientRepositoryRO.findById(id).map(klient -> {
             // Pobieramy transakcje z bazy
-            List<Transakcja> listaZazyczna = transakcjaRepository.findByKlientId(id);
+            List<Transakcja> listaZazyczna = transakcjaRepositoryRO.findByKlientId(id);
 
             // Mapujemy "ciężkie" transakcje na "lekkie" rekordy
             List<TransakcjaInfo> transakcjeInfo = listaZazyczna.stream()

@@ -9,7 +9,7 @@ import jakarta.annotation.PreDestroy;
 import jakarta.inject.Singleton;
 
 
-@Requires(notEnv = "ttt")
+@Requires(notEnv = "dev")
 @Singleton
 @RabbitListener
 public class BatchTransakcjaListener {

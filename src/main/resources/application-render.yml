@@ -12,6 +12,39 @@ datasources:
     dialect: POSTGRES
     schema-generate: CREATE
 
+    # --- PARAMETRY HIKARI (Zarządzanie Pulą) ---
+    maximum-pool-size: 10
+    minimum-idle: 5
+    # KLUCZOWY: Maksymalny czas życia połączenia. Po tym czasie Hikari po cichu
+    # wymienia połączenie na nowe. To właśnie ten parametr wymusza powrót na Mastera.
+    max-lifetime: 300000
+
+    # Jak długo aplikacja ma czekać na wolne połączenie z puli, zanim rzuci błędem.
+    # 5 sekund to zdrowy balans między cierpliwością a responsywnością.
+    connection-timeout: 5000
+
+    # Jak długo Hikari ma czekać na potwierdzenie "życia" sesji podczas testu.
+    validation-timeout: 5000
+
+    # Szybkie zapytanie sprawdzające, czy baza żyje.
+    # "SELECT 1" jest najlżejszą możliwą operacją dla silnika PostgreSQL.
+    connection-test-query: "SELECT 1"
+
+    # --- PARAMETRY STEROWNIKA (Failover & SQL Optimization) ---
+    # --- jesli ma odpowiadać pasywnie przy przełączeniu na slave, to trzeba pamietac o klasie z health
+    data-source-properties:
+      # Priorytet wyboru hosta. "preferPrimary" oznacza: zawsze próbuj wejść na 5434 (Master),
+      # a jeśli on nie żyje, idź do kolejnych (Slave) w trybie Read-Only.
+      targetServerType: "preferPrimary"
+
+      # Czas "kary" dla hosta, który nie odpowiedział. Jeśli Master padnie,
+      # sterownik przez 5s będzie pamiętał, że jest "martwy", oszczędzając czas na próbach.
+      hostRecheckSeconds: 5
+
+      # Mechanizm sieciowy "pingujący" połączenie na poziomie TCP.
+      # Pomaga wykryć np. przerwany kabel lub restart firewalla, który "zamroził" sesję.
+      tcpKeepAlive: true
+
 rabbitmq:
   # Zmienne wyciągnięte osobno
   username: rkzowxnc
@@ -19,6 +52,13 @@ rabbitmq:
   host: kebnekaise.lmq.cloudamqp.com
   port: 5672
   virtual-host: rkzowxnc
+  listener:
+    transakcje:
+      # To jest nasz główny "suwak" sterujący
+      batch-size: 100
+  consumers:
+    transakcje-listener: # To jest ID, które nadamy w kodzie
+      prefetch: ${rabbitmq.listener.transakcje.batch-size}
 
 endpoints:
   all:
